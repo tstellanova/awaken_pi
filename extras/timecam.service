@@ -1,0 +1,16 @@
+[Unit]
+Description=Timecam Service
+After=network.target 
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/Documents/proj/awaken_pi
+ExecStart=/home/pi/Documents/proj/awaken_pi/target/debug/awaken_pi
+Restart=on-abort
+StandardOutput=journal
+StandardError=inherit
+SyslogIdentifier=timecam
+
+[Install]
+WantedBy=multi-user.target
