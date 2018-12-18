@@ -6,13 +6,13 @@ Enables using a DS3231 standalone real time clock to repeatedly halt and reawake
 
 Tested with rpi3 and rpi0w.
 
-Wiring instructions coming soon.  Briefly: Put a 4.7nF capacitor between INT pin of the DS3231 and the SCLK ("C") pin connected to the rpi. This acts as an RC differentiator, sending a single short pulse to the SCLK pin on the rpi when the INT pin latches low. If you simply connect INT directly to SCLK, this would interfere with the i2c bus and prevent communications with the DS3231. 
+Wiring instructions coming soon.  Briefly: Put a 4.7nF capacitor between INT pin of the DS3231 module and the SCLK ("C") pin connected to the rpi. This acts as an RC differentiator, sending a single short pulse to the SCLK pin on the rpi when the INT pin latches low. If you simply connect INT directly to SCLK, this would interfere with the i2c bus and prevent communications with the DS3231. 
 
 ### Enabling i2c
 
 - Use `sudo raspi-config` to enable i2c
 - Check `ls /dev/*i2c*` and verify `/dev/i2c-1` is visible
-- Attach a suitable DS3231 RTC module and check that `sudo i2cdetect -y 1` shows a device at address `68`
+- Attach a [suitable DS3231 RTC module](http://a.co/d/0KolyPX) and check that `sudo i2cdetect -y 1` shows a device at address `68`
 
 ### First time run
 
