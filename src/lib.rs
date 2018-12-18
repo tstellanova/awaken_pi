@@ -9,7 +9,6 @@ LICENSE: See LICENSE file
 
 
 
-use std::thread::sleep;
 
 extern crate chrono;
 use chrono::{Duration, Datelike, Timelike, Utc};
@@ -104,33 +103,13 @@ fn set_date_time_alarm(goal: &chrono::DateTime<chrono::Utc>) {
 
 /// Halt the Pi and reawaken when the number of minutes given have elapsed.
 pub fn reawaken_in_minutes(minutes: u32) {
-  set_minutes_delay_alarm(minutes);
-  
-  //wait a little while, give us a chance to ssh in
-  sleep(std::time::Duration::from_secs(60));
-  
+  set_minutes_delay_alarm(minutes);  
   safe_shutdown();
 }
 
 /// Halt the Pi and reawaken at the time given
 pub fn reawaken_at_time(date_time: &chrono::DateTime<chrono::Utc>) {
   set_date_time_alarm(&date_time);
-  
-  //wait a little while, give us a chance to ssh in
-  sleep(std::time::Duration::from_secs(60));
-  
   safe_shutdown();
 }
 
-// fn main() {
-//   let now = Utc::now();
-//   let time_str = now.format("%Y%m%d_%H%M%SZ-cap.jpg").to_string();
-//   let fname = time_str.clone();
-//   capture_raspistill(&fname);
-//
-//   //wait a little while, give us a chance to ssh in
-//   sleep(std::time::Duration::from_secs(60));
-//
-//   set_minutes_delay_alarm(1);
-//   safe_shutdown();
-// }

@@ -6,7 +6,10 @@ authors = ["Todd Stellanova <tstellanova@users.noreply.github.com>"]
 [dependencies]
 ds323x = "0.2.0"
 chrono = "0.4"
-runas = "0.1.4"
 linux-embedded-hal = "0.2.1"
+runas = "0.1.4"
+route_available = "0.1.0"
 
 
+[patch.crates-io]
+route_available = { git = "https://github.com/tstellanova/route_available"  }
