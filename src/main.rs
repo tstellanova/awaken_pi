@@ -4,7 +4,7 @@ Copyright (c) 2018 Todd Stellanova
 LICENSE: See LICENSE file
 */
 extern crate chrono;
-use chrono::{Local, Timelike};
+use chrono::{Utc, Timelike};
 use std::process::Command;
 
 
@@ -39,25 +39,27 @@ fn capture_raspistill(filename: &str) {
 
 fn main() {
   use std::path::Path;
+  let now = awaken_pi::get_date_time();    
+  let time_str = now.format("%Y%m%d_%H%M%SZ-cap.jpg").to_string();
 
-  let now = Local::now();
   if now.hour() > 4 && now.hour() < 19 {
-    let time_str = now.format("%Y%m%d_%H%M%SZ-cap.jpg").to_string();
     let fname = time_str.clone();
     capture_raspistill(&fname);
+  }
+  else {
+      println!("nighttime: skip photo {}",time_str);
   }
 
   // This app is run as a service at reboot:
   // as a means to stop it running and shutting down forever,
   // check whether an SD card is inserted (via USB OTG)
   // and only set a reboot time if there is no external SD card
-  if !Path::new("/dev/sda").exists() {
-    awaken_pi::reawaken_in_minutes(5); 
+    if !Path::new("/dev/sda").exists() {
+    awaken_pi::reawaken_in_minutes(5 as u8);
   }
-  else { 
+  else {
     println!("stop running: sd card inserted");
     println!("------- done ----");
   }
-
   
 }
