@@ -79,8 +79,8 @@ fn safe_shutdown() {
   }
 }
 
-
-fn check_and_reset_datetime() {
+/// Check whether the RTC is set to a reasonable time and, if not, set the time
+pub fn check_and_reset_datetime() {
   let dev = hal::I2cdev::new("/dev/i2c-1").unwrap();
   let mut rtc = Ds323x::new_ds3231(dev);
   
@@ -101,11 +101,10 @@ fn check_and_reset_datetime() {
                    };
     
     rtc.set_datetime(&datetime).expect("couldn't set_datetime");
-    //force release i2c bus
   }
   
+  //force release i2c bus
   let _dev = rtc.destroy_ds3231();
-   
 }
 
 /// Tell the RTC to set an alarm by delay from the current time

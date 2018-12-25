@@ -4,7 +4,7 @@ Copyright (c) 2018 Todd Stellanova
 LICENSE: See LICENSE file
 */
 extern crate chrono;
-use chrono::{Utc, Timelike};
+use chrono::{Timelike};
 use std::process::Command;
 
 
@@ -19,10 +19,9 @@ rscam abstraction layers.
 */
 fn capture_raspistill(filename: &str) {
 
-  //raspistill -v -n -rot 180 -o
+  //raspistill -v -n  -o
   let status = Command::new("raspistill")
 	.arg("-n")
-  .arg("-rot").arg("180")
 	.arg("-t").arg("250")
 	.arg("-o").arg(filename)
 	.status().expect("cmd failed!");
@@ -42,7 +41,8 @@ fn main() {
   let now = awaken_pi::get_date_time();    
   let time_str = now.format("%Y%m%d_%H%M%SZ-cap.jpg").to_string();
 
-  if now.hour() > 4 && now.hour() < 19 {
+  let local_hour = now.hour() - 8; //Biased to PST
+  if local_hour > 4 && local_hour < 19 {
     let fname = time_str.clone();
     capture_raspistill(&fname);
   }
