@@ -4,13 +4,11 @@ Copyright (c) 2018 Todd Stellanova
 LICENSE: See LICENSE file
 */
 extern crate chrono;
-use chrono::{Utc};
+use chrono::{Local, Timelike};
 use std::process::Command;
 
-use std::thread::sleep;
 
 extern crate awaken_pi;
-extern crate route_available;
 
 /**
 This capture method uses the canned `raspistill` command to
@@ -40,17 +38,26 @@ fn capture_raspistill(filename: &str) {
 
 
 fn main() {
-  let now = Utc::now();
-  let time_str = now.format("%Y%m%d_%H%M%SZ-cap.jpg").to_string();
-  let fname = time_str.clone();
-  capture_raspistill(&fname);
-  // assuming we are running this application as a service at reboot,
-  // we want to give ourselves time to ssh into this machine and stop the
-  // service if desired. 
-  if route_available::route_available() {
-    //wait a little while, give us a chance to ssh in
-    sleep(std::time::Duration::from_secs(60));
+  use std::path::Path;
+
+  let now = Local::now();
+  if now.hour() > 4 && now.hour() < 19 {
+    let time_str = now.format("%Y%m%d_%H%M%SZ-cap.jpg").to_string();
+    let fname = time_str.clone();
+    capture_raspistill(&fname);
   }
+
+  // This app is run as a service at reboot:
+  // as a means to stop it running and shutting down forever,
+  // check whether an SD card is inserted (via USB OTG)
+  // and only set a reboot time if there is no external SD card
+  if !Path::new("/dev/sda").exists() {
+    awaken_pi::reawaken_in_minutes(5); 
+  }
+  else { 
+    println!("stop running: sd card inserted");
+    println!("------- done ----");
+  }
+
   
-  awaken_pi::reawaken_in_minutes(4);
 }
