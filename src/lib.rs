@@ -8,13 +8,10 @@ LICENSE: See LICENSE file
 
 
 
-
-
 extern crate chrono;
 use chrono::{Datelike, Timelike, Utc, DateTime};
 
 extern crate runas;
-
 
 extern crate linux_embedded_hal as hal;
 
@@ -24,7 +21,7 @@ use ds323x::{ Ds323x, Hours, DayAlarm1, Alarm1Matching };
 
 
 /// Ensure the RTC is set to the same time as the system clock
-pub fn set_date_time() {
+pub fn set_rtc_date_time_to_system_time() {
     let dev = hal::I2cdev::new("/dev/i2c-1").expect("could not grab i2c-1");
     let mut rtc = Ds323x::new_ds3231(dev);
     let actual_time = Utc::now();
@@ -83,12 +80,12 @@ pub fn reawaken_in_minutes(minutes: u8) {
   safe_shutdown();
 }
 
-
+/// Convert DS323x::Hours to integer value
 fn hour_24(hour: Hours) -> u8 {
-    match hour {
-        Hours::PM(v) => 12 + v,
-        Hours::H24(v) | Hours::AM(v) => v,
-    }
+  match hour {
+      Hours::PM(v) => 12 + v,
+      Hours::H24(v) | Hours::AM(v) => v,
+  }
 }
 
 /// Shut down the system, entering HALT mode on raspberry pi
@@ -108,33 +105,7 @@ fn safe_shutdown() {
   }
 }
 
-/// Check whether the RTC is set to a reasonable time and, if not, set the time
-pub fn check_and_reset_datetime() {
-  let dev = hal::I2cdev::new("/dev/i2c-1").unwrap();
-  let mut rtc = Ds323x::new_ds3231(dev);
-  
-  // Verify that the RTC is set to some reasonable time
-  let cur_date = rtc.get_datetime().expect("Couldn't get the date time");
-  if cur_date.year < 2018 {
-    println!("bogus cur_date: reset!");
-    let actual_time = Utc::now();
 
-    let datetime = ds323x::DateTime {
-                              year: actual_time.year() as u16,
-                              month: actual_time.month() as u8,
-                              day: actual_time.day() as u8,
-                              weekday: actual_time.weekday() as u8,
-                              hour: Hours::H24(actual_time.hour() as u8),
-                              minute: actual_time.minute() as u8,
-                              second: actual_time.second() as u8,
-                   };
-    
-    rtc.set_datetime(&datetime).expect("couldn't set_datetime");
-  }
-  
-  //force release i2c bus
-  let _dev = rtc.destroy_ds3231();
-}
 
 /// Tell the RTC to set an alarm by delay from the current time
 fn set_minutes_delay_alarm(minutes_delay: u8) {
