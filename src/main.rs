@@ -41,8 +41,15 @@ fn main() {
   let now = awaken_pi::get_date_time();    
   let time_str = now.format("%Y%m%d_%H%M%SZ-cap.jpg").to_string();
 
-  let local_hour = now.hour() - 8; //Biased to PST
-  if local_hour > 4 && local_hour < 19 {
+  let mut local_hour = now.hour();
+  if local_hour > 7  {
+      local_hour = local_hour - 8;
+  }
+  else {
+      local_hour = local_hour + 16;
+  }
+
+  if local_hour > 6 && local_hour < 18 {
     let fname = time_str.clone();
     capture_raspistill(&fname);
   }
