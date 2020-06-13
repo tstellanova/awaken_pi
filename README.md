@@ -10,10 +10,15 @@ Wiring instructions coming soon.  Briefly: Put a 4.7nF capacitor between INT pin
 
 ### Enabling i2c
 
-- Use `sudo raspi-config` to enable i2c (raspberry pi only -- different on eg rock64 or rockpi?)
+- Use `sudo raspi-config` to enable i2c (raspberry pi only)
 - Check `ls /dev/*i2c*` and verify `/dev/i2c-1` is visible
 - Install i2c tools:  `sudo apt-get install -y i2c-tools`
 - Attach a [suitable DS3231 RTC module](http://a.co/d/0KolyPX) and check that `sudo i2cdetect -y 1` shows a device at address `68`
+
+#### Note on rock64
+- Enabling gpio and i2c on rock64 is slightly different. By default Armbian Buster enables i2c1 and i2c4.  
+- You can connect the RTC to i2c1 on pins 27 (SDA) and 28 (SCL) and then `i2cdetect` should find the device as above.
+
 
 ### First time run
 
