@@ -4,9 +4,9 @@
 
 Enables using a DS3231 standalone real time clock to repeatedly halt and reawaken a Raspberry Pi. This allows you to maximize your battery life while doing things like time lapse photography. 
 
-Tested with rpi3 and rpi0w.
+Tested with rpi3, rpi0w, and rock64 (running Armbian).
 
-Wiring instructions coming soon.  Briefly: Put a 4.7nF capacitor between INT pin of the DS3231 module and the SCLK ("C") pin connected to the rpi. This acts as an RC differentiator, sending a single short pulse to the SCLK pin on the rpi when the INT pin latches low. If you simply connect INT directly to SCLK, this would interfere with the i2c bus and prevent communications with the DS3231. 
+Brief wiring instructions: Put a 4.7nF capacitor between `INT/SQW` pin of the DS3231 module and the `SCLK` ("C") pin connected to the rpi. This acts as an RC differentiator, sending a single short pulse to the `SCLK` pin on the rpi when the `INT/SQW` pin latches low. If you simply connect `INT/SQW` directly to SCLK, this would interfere with the i2c bus and prevent communications with the DS3231. 
 
 ### Enabling i2c
 
@@ -22,7 +22,7 @@ Wiring instructions coming soon.  Briefly: Put a 4.7nF capacitor between INT pin
 
 ### First time run
 
-- Try `cargo run` and verify that the binary takes a picture with the rpi camera, then shuts down. A few minutes time later, the rpi should reboot.  If you setup the systemd service as detailed below, the app will automatically restart at boot, giving you a timelapse photography service. 
+- Try `cargo run` and verify that the alarm triggers, then shuts down. A few minutes time later, the rpi should reboot.  If you setup the systemd service as detailed below, the app will automatically restart at boot, giving you eg a timelapse photography service. 
 
 ### Setting up service to start at reboot
 - Build `awaken_pi` with `cargo build`
@@ -31,4 +31,4 @@ Wiring instructions coming soon.  Briefly: Put a 4.7nF capacitor between INT pin
 
 
 ### License
-See LICENSE file
+BSD-3: See LICENSE file
