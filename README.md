@@ -18,7 +18,7 @@ Brief wiring instructions: Put a 4.7nF capacitor between `INT/SQW` pin of the DS
 #### Note on rock64
 - Enabling gpio and i2c on rock64 is slightly different. By default Armbian Buster enables i2c1 and i2c4.  
 - You can connect the RTC to i2c1 on pins 27 (SDA) and 28 (SCL) and then `i2cdetect` should find the device as above.
-
+- Wakeup does not currently work with i2c1 because rock64 does not have a "wake from halt" configured with Armbian
 
 ### First time run
 
